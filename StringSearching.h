@@ -16,7 +16,12 @@ private:
 	unsigned max_num_patterns;
 	unsigned len_pattern;
 	unsigned len_text;
-	//vector<unsigned> answer;
+
+	vector<unsigned> answerNaive;
+	vector<unsigned> answerRKM;
+	vector<unsigned> answerSA;
+	vector<unsigned> answerKMP;
+	vector<unsigned> answerAC;
 
 	void changeText(unsigned length);
 	void changePattern(unsigned length);
@@ -24,6 +29,7 @@ private:
 	void fillTable(const string& pat, unsigned m, unsigned **table);
 	unsigned nextState(const string& pat, unsigned m, unsigned state, unsigned x);
 	void computePrefixFunction(const string& pat, vector<unsigned> &pref_func);
+	bool equalAnswer(const vector<unsigned> & A1, const vector<unsigned> & A2);
 public:
 	StringSearching(vector<char> alphabet, unsigned max_len, unsigned max_num_patterns) {
 		this->alphabet = alphabet;
@@ -31,7 +37,7 @@ public:
 		this->max_num_patterns = max_num_patterns;
 	}
 
-	void investigate(string fix_value , unsigned length_start, unsigned length_end, unsigned step, unsigned num_iter, ostream &out);
+	void investigate(string fix_value, const unsigned length_start, const unsigned length_end, const unsigned step, const unsigned num_iter, ostream &out);
 
 	void naiveStringMatcher(const string& pat);
 	void rabinKarpMatcher(const string& pat);
