@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <cassert>
-
+#include "AhoCorasick.h"
 const unsigned CHARS = 256;
 
 
@@ -15,7 +15,6 @@ bool StringSearching::equalAnswer(const vector<unsigned> & A1, const vector<unsi
 void StringSearching::naiveStringMatcher(const string& pat) {
 	unsigned n = text.length();
 	unsigned m = pat.length();
-
 	for (unsigned s = 0; s <= n - m; s++) {
 		unsigned k;
 		for (k = 0; k < m; k++) {
@@ -225,8 +224,8 @@ void StringSearching::kmpMatcher(const string& pat) {
 
 void StringSearching::changeText(const unsigned length) {
 	if (patterns.size() == 0) {
-		num_patterns = 1 + rand() % max_num_patterns;
-		len_pattern = 5;//+ rand() % length
+		num_patterns = 10 + rand() % max_num_patterns;
+		len_pattern = 20;//+ rand() % length
 	}
 	else {
 		for (auto && pattern : patterns) {
@@ -250,8 +249,8 @@ void StringSearching::changeText(const unsigned length) {
 
 void StringSearching::changePattern(const unsigned length) {
 	if (patterns.size() == 0) {
-		len_text = length * 2 + rand() % max_len;
-		num_patterns = 1 + rand() % max_num_patterns;
+		len_text = 50000;//length * 2 + rand() % max_len
+		num_patterns = 10 + rand() % max_num_patterns;
 	}
 	else {
 		for (auto && pattern : patterns) {
@@ -277,8 +276,8 @@ void StringSearching::changePattern(const unsigned length) {
 
 void StringSearching::changeNumPatterns(const unsigned number) {
 	if (patterns.size() == 0) {
-		len_text = 20 + rand() % max_len;
-		len_pattern = 5;// + rand() % len_text
+		len_text = 50000;//20 + rand() % max_len
+		len_pattern = 20;// + rand() % len_text
 	}
 	else {
 		for (auto && pattern : patterns) {
@@ -396,11 +395,18 @@ void StringSearching::investigate(string fix_value, const unsigned length_start,
 				//answerKMP.clear();
 				//answerNaive.clear();
 
-				//t_start = high_resolution_clock::now();
-				////ahoCorasick();
-				//t_end = high_resolution_clock::now();
-				//time = duration_cast<duration<double, milli>>(t_end - t_start);
-				//aver_time_corasick += time.count();
+				AhoCorasick ahoAlg;
+				auto t_start = high_resolution_clock::now();
+				for (int i = 0; i < patterns.size(); i++) {
+					ahoAlg.addString(patterns[i], i);
+				}
+				ahoAlg.prepare();
+				ahoAlg.proccesString(text, answerAC);
+				auto t_end = high_resolution_clock::now();
+				auto time = duration_cast<duration<double, milli>>(t_end - t_start);
+				aver_time_corasick += time.count();
+				//assert(equalAnswer(answerNaive, answerAC));
+				answerAC.clear();
 			}
 
 			aver_time_naive /= num_iter;

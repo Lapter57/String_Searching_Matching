@@ -17,11 +17,11 @@ int main() {
 	alphabet.push_back('7');
 	alphabet.push_back('8');
 	alphabet.push_back('9');*/
-	StringSearching str_search(alphabet, 10000, 50);
+	StringSearching str_search(alphabet, 100000, 50);
 
 	out.open("dataNoFixN.txt");
 	try {
-		str_search.investigate("text", 1000, 10000, 1000, 10000, out);
+		str_search.investigate("text", 10000, 100000, 10000, 10000, out);
 		out.close();
 
 		out.open("dataNoFixM.txt");
