@@ -27,30 +27,30 @@ void StringSearching::naiveStringMatcher(const string& pat) {
 	}
 }
 
-unsigned exp_mod(unsigned x, unsigned n, unsigned m) {
-	if (n == 0)
+unsigned exp_mod(unsigned d, unsigned m, unsigned q) {
+	if (m == 0)
 		return 1;
-	else if (n == 1)
-		return x % m;
+	else if (m == 1)
+		return d % q;
 	else {
-		unsigned square = (x*x) % m;
-		unsigned exp = exp_mod(square, n / 2, m);
+		unsigned square = (d*d) % q;
+		unsigned exp = exp_mod(square, m / 2, q);
 
-		if (n % 2 == 0)
-			return exp % m;
+		if (m % 2 == 0)
+			return exp % q;
 		else
-			return (exp*x) % m;
+			return (exp*d) % q;
 	}
 }
 
-unsigned hash_2(const string & str, unsigned len, unsigned b, unsigned m) {
+unsigned myHash(const string & str, unsigned len, unsigned d, unsigned q) {
 	unsigned value = 0;
 	unsigned power = 1;
 	for (int i = len - 1; i >= 0; i--) {
 		value += (power * str[i]);
-		value %= m;
-		power *= b;
-		power %= m;
+		value %= q;
+		power *= d;
+		power %= q;
 	}
 	return value;
 }
@@ -58,21 +58,11 @@ unsigned hash_2(const string & str, unsigned len, unsigned b, unsigned m) {
 void StringSearching::rabinKarpMatcher(const string& pat) {
 	unsigned m = pat.length();
 	unsigned n = text.length();
-	//long long h = 1, p = 0, t = 0;
-	unsigned d = alphabet.size();
-	unsigned q = 257;
-	unsigned b = 1024;
-	unsigned h = exp_mod(q, m, b);
-	unsigned p = hash_2(pat, pat.size(), q, b);
-	unsigned t = hash_2(text, pat.size(), q, b);
-	/*for (unsigned j = 1; j < m; j++) {
-	h = (d*h) % q;
-	}*/
-
-	/*for (unsigned j = 0; j < m; j++) {
-	p = (p*d + pat[j]) % q;
-	t = (t*d + text[j]) % q;
-	}*/
+	unsigned d = 257;
+	unsigned q = 1024;
+	unsigned h = exp_mod(d, m, q);
+	unsigned p = myHash(pat, pat.size(), d, q);
+	unsigned t = myHash(text, pat.size(), d, q);
 
 	for (unsigned i = 0; i <= n - m; i++) {
 		if (p == t) {
@@ -83,18 +73,16 @@ void StringSearching::rabinKarpMatcher(const string& pat) {
 			}
 			if (j == m) {
 				answerRKM.push_back(i);
-				//cout << i << endl;
 			}
 		}
 
 		if (i < n - m) {
 			t *= q;
-			t -= ((text[i] * h) % b);
+			t -= ((text[i] * h) % q);
 			t += text[i + m];
-			t %= b;
-			//t = (d*(t - text[i] * h) + text[i + m]) % q;
+			t %= q;
 			if (t < 0) {
-				t += b;
+				t += q;
 			}
 		}
 	}
