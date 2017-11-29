@@ -18,11 +18,15 @@ public:
 		trie.push_back(new Vertex());
 		size++;
 	}
+
+	~AhoCorasick() {
+		clearTrie();
+	}
 	
 	void addString(const string &str, int wordID);
 	void prepare();
 	void proccesString(const string &text, vector<unsigned> &answer);
-
+	void clearTrie();
 };
 
 

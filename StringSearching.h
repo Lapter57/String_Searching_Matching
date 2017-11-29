@@ -23,10 +23,12 @@ private:
 	vector<unsigned> answerKMP;
 	vector<unsigned> answerAC;
 
+	void fill();
 	void changeText(unsigned length);
 	void changePattern(unsigned length);
 	void changeNumPatterns(unsigned number);
 	void fillTable(const string& pat, unsigned m, unsigned **table);
+	void computeTransFun(const string& pat, const unsigned m, unsigned **table);
 	unsigned nextState(const string& pat, unsigned m, unsigned state, unsigned x);
 	void computePrefixFunction(const string& pat, vector<unsigned> &pref_func);
 	bool equalAnswer(const vector<unsigned> & A1, const vector<unsigned> & A2);
@@ -37,7 +39,7 @@ public:
 		this->max_num_patterns = max_num_patterns;
 	}
 
-	void investigate(string fix_value, const unsigned length_start, const unsigned length_end, const unsigned step, const unsigned num_iter, ostream &out);
+	void investigate(string fix_value, const unsigned length_start, const unsigned length_end, const unsigned step, const unsigned num_iter, ostream &out, ostream &out2);
 
 	void naiveStringMatcher(const string& pat);
 	void rabinKarpMatcher(const string& pat);

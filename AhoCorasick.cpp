@@ -1,6 +1,14 @@
 #include "AhoCorasick.h"
 #include <queue>
 
+void AhoCorasick::clearTrie() {
+	for (auto && vertex : trie) {
+		delete vertex;
+	}
+	trie.clear();
+	wordsLength.clear();
+}
+
 void AhoCorasick::addString(const string &str, int wordID) {
 
 	int curVertex = root;
@@ -107,4 +115,6 @@ void AhoCorasick::proccesString(const string &text, vector<unsigned> &answer) {
 			checkState = trie[checkState]->suffixLink;
 		}
 	}
+
+	clearTrie();
 }
